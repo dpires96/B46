@@ -144,6 +144,7 @@ plt.xlabel("C_D [-]")
 plt.ylabel("C_L [-]")
 plt.show()
 
+
 plt.figure(3)
 q=np.polyfit(alph,c_l,2)
 f=np.poly1d(q)
@@ -158,7 +159,7 @@ plt.xlabel("alpha [°]")
 plt.ylabel("C_L [-]")
 plt.show()
 
-c_l_alpha=(c_l[-1]-c_l[0])/(alph[-1]-alph[0])
+c_l_alpha=(max(c_l)-min(c_l))/(max(alph)-min(alph))
 print("Data for figure 2 and 3:")
 print("Aircraft Configuration: Clean")
 print("Reynolds number range:",min(Re),max(Re))
@@ -285,6 +286,12 @@ plt.ylabel("δ_e [°]")
 plt.gca().invert_yaxis()
 plt.show()
 
+#print("Stuff graphs ve delta e:")
+#print("v_tilda1",v_tilda1)
+#print("de_str2", de_str2)
+#print("x_new1", x_new1)
+#print("y_new1", y_new1)
+
 Fe_ref2=[2,-12,-23,-37,31,61,85] #Fe ref2 in N
 alpha2=[5.0,5.8,6.7,7.7,4.2,3.6,3.2] #Alpha ref2 in deg
 de2=[-0.6,-1.0,-1.5,-2.0,-0.2,0.2,0.5]    #de ref2 in deg
@@ -312,6 +319,12 @@ plt.xlim([v_tilda[0]-1, v_tilda[-1] + 1 ])
 plt.xlabel("ṽ_e [m/s]")
 plt.ylabel("F_e [N]")
 plt.show()
+
+#print("Stuff graphs ve Fe:")
+#print("v_tilda",v_tilda1)
+#print("Fe_air_eff", Fe_air_eff)
+#print("x_new", x_new)
+#print("y_new", y_new)
 #plt.scatter(alpha2,de2)
 #plt.show()
 #plt.scatter(v_tilda,de_str2)
@@ -320,6 +333,8 @@ plt.show()
 
 #Print required values:
 print("Values required:")
+print("Oswald factor:", e)
+print("CD_0:",cd_0)
 print("C_L_alpha=", c_l_alpha)
 print("C_m_alpha=", cm_alpha2)
 print("C_m_delta=", cm_delta2)
