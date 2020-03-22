@@ -26,7 +26,7 @@ def eigenvalues(rho, mass, V0):
     Czu, Cza, Czadot, Czq = -0.3762, -5.7434, -0.0035, -5.6629
     Cmu, Cma, Cmadot, Cmq, Ky = 0.0699, -0.5626, 0.178, -8.7941, sqrt(1.3925)
     
-    CL = 2*mass/(rho*V0**2*S)
+    CL = 2*mass*9.81/(rho*V0**2*S)
     CYB, CYBdot, CYp, CYr = -0.75, 0, -0.0304, 0.8495
     ClB, Clp, Kx, Clr, Kxz = -0.1026, -0.7108, sqrt(0.019), 0.2376, sqrt(0.002)
     CnB, CnBdot, Cnp, Cnr, Kz = 0.1348, 0, -0.0602, 0.2061, sqrt(0.042)
@@ -79,8 +79,10 @@ def eigenvalues(rho, mass, V0):
     print(eig_sSP, eig_sLP, eig_aAR, eig_aDR, eig_aAS)
     return eig_sSP, eig_sLP, eig_aAR, eig_aDR, eig_aAS
 
-mass = 65598.82245/9.81
-rho = 84275.56
-V0 = 128.09556
+
+
+mass = 6525
+rho = 1.062584751
+V0 = 137.0688615
 
 eigenvalues(rho, mass, V0)
