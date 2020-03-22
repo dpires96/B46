@@ -22,18 +22,10 @@ Cmu, Cma, Cmadot, Cmq, Ky = symbols('Cmu, Cma, Cmadot, Cmq, Ky')
 cbar, V = symbols('cbar, V')
 
 
-##### Short Period Motion #####
-C1symsp = Matrix([
-    [(Czadot-2*MUc)*cbar/V, 0],
-    [Cmadot*cbar/V, -2*MUc*Ky**2*cbar/V]
+##### Short Period Motion (2x2 Matrix) #####
+Asymsp = Matrix([
+    [Cza + (Czadot-2*MUc)*eig, Czq + 2*MUc],
+    [Cma + Cmadot*eig, Cmq - 2*MUc*Ky**2*eig]
     ])
 
-C2symsp = Matrix([
-    [Cza, Czq + 2*MUc],
-    [Cma, Cmq]
-    ])
-
-Asymsp = -C1symsp**-1*C2symsp
-Asymsp = Asymsp - eig*eye(max(Asymsp.shape))
-
-solve(Asymsp.det(), eig)
+eigsymsp = solve(Asymsp.det(), eig)
