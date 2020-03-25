@@ -41,9 +41,6 @@ for i in h_p:
 
 # finding mach number
 #to make the equation easier its broken down into smaller equations
-#v1=2/(y-1)
-#v2=((y-1)*rho0)/(2*y*P0)
-#v3=y/(y-1)
 V_c=[249,221,192,163,130,118]    # input speeds
 M=[]
 for i in range(0,6):
@@ -64,13 +61,7 @@ for i in range(0,6):
     c6=2/(y-1)
     step_8=c6*step_7
     M=M+[step_8**0.5]
-    #v2=(v2*(V_c[i])**2+1)**v3-1
-    #v4=((P0/P[i])*v2+1)**v3
-    #v5=v1*(v4-1)
-    #M=M+[v5**0.5]
 
-
-#C_L=L/(0.5*rho*v**2*s)
 
 #temperature correction
 T_m=[12.5,10.5,8.8,7.2,6,5.2]
@@ -125,19 +116,17 @@ for i in range(0,6):
 e=(c_lsqr[-1]-c_lsqr[0])/(c_d[-1]-c_d[0])*(1/(m.pi*A))  #e
 m=(1/(m.pi*A*e))
 cd_0=c_d[0]-m*c_lsqr[0]     #cd_0
-print("e",e)
-print("cd0",cd_0)
+print("e=",e)
+print("cd0=",cd_0)
 
 alph=[1.7,2.4,3.6,5.4,8.7,10.6]
 alph_rad=[]
 for i in range(0,6):
     alph_rad=alph_rad+[alph[i]*3.14/180]
-#print(alph_rad)
+
 
 cl_alpha=(c_l[-1]-c_l[0])/(alph_rad[-1]-alph_rad[0])
-#g=np.polyfit(alph_rad,c_l,1)
-#g1=np.poly1d(g)
-print("cl_alpha",cl_alpha)
+print("cl_alpha=",cl_alpha)
 
 
 #cd-cl
@@ -217,23 +206,6 @@ plt.xlabel("alpha [rad]")
 plt.ylabel("C_L [-]")
 plt.show()
 
-#v_tilda=np.array(v_tilda)
-#v_tilda=np.sort(v_tilda)    # for linspace
-#Fe_air_eff=np.array(Fe_air_eff)
-#Fe_air_eff=np.sort(Fe_air_eff)
-#x_new = np.linspace(v_tilda[0], v_tilda[-1])
-#y_new = f(x_new)
-#plt.plot(v_tilda,Fe_air_eff,'o', x_new, y_new)
-#plt.xlim([v_tilda[0]-1, v_tilda[-1] + 1 ])
-#print(cl_alpha)
-#plt.plot(c_lsqr,c_d)
-#plt.scatter(alph_rad,c_l)
-#plt.plot(alph,c_d)
-#plt.show()
-
-#  stationary measurement series 2
-#  stationary measurement series 2
-#  stationary measurement series 2
 #  stationary measurement series 2
 cm_tc=-0.0064
 mfs=0.048  #kg/s
@@ -309,8 +281,7 @@ v_tilda=[]
 for i in range(0,7):
     v_tilda=v_tilda+[v_eq2[i]*(W_s/Lift_req2[i])**0.5]    #input for the graph
 
-#print(v_tilda)
-#print(v_eq2,a2,rho2,vt2)
+
 Tot_Thr_s2=[2678.12,2801.72,2914.08,3040.54,2593.0,2508.5,2355.64]
 
 TC2=[]
@@ -388,17 +359,13 @@ v_tilda1=np.array(v_tilda)
 v_tilda1=np.sort(v_tilda1)    # for linspace sorted in ascending order, for this graph v_tilda is called v_tilda1
 de_str2=np.array(de_str2)
 de_str2=np.sort(de_str2)
-#print(de_str2)
 x_new1 = np.linspace(v_tilda1[0], v_tilda1[-1])
 y_new1 = f1(x_new1)
 plt.plot(v_tilda1,de_str2,'o', x_new1, y_new1,color="green",label="Reference Data")
 plt.plot(v_tilda1_meas,de_str2_meas,'o',x_new1_meas, y_new1_meas,color="orange",label="Measurement Data")
 plt.legend()
-#plt.xlim([v_tilda[0]-1, v_tilda[-1] + 1 ])
 plt.xlabel("ṽ_e [m/s]")
 plt.ylabel("δ_e [°]")
-
-#plt.scatter(v_tilda1,de_str2)
 plt.gca().invert_yaxis()
 plt.show()
 
@@ -414,10 +381,6 @@ Fe_air_eff=[]
 for i in range (0,7):
     Fe_air_eff= Fe_air_eff+[Fe_ref2[i]*W_s/Lift_req2[i]]
 print("cm_alpha2",cm_alpha2)
-#plt.scatter(alpha2,de2)
-#plt.show()
-#plt.scatter(v_tilda,Fe_air_eff)
-
 
 plt.figure(1)
 plt.gca().invert_yaxis()
@@ -447,8 +410,6 @@ pound_to_kg=0.453592
 kg_to_pound=2.20462
 #xcg of aircraft BEM
 #using data from Mass and Balance report on BS
-#2672953.5
-#67874.26553958168
 xcg_BEM=291.65 #inches
 #xcg_BEM_tot=2672953.5
 #xcg_BEM_tot_metre=xcg_BEM_tot*inch_metre*pound_to_kg
@@ -471,7 +432,6 @@ for i in range(0,9):
     Mass_pass_pound =Mass_pass_pound+[M_pass[i]*kg_to_pound]
     xcg_pass_tot=(M1*xcg_pass_tot+Mass_pass_pound[i]*xcg_pass[i])/(M1+Mass_pass_pound[i])  #inches for case 1
     M1=M1+Mass_pass_pound[i]
-    #print(xcg_pass_tot)
 mzfw=aircraft_pounds+Mass_Pass_tot_pound
 M_123=M1-(o_3L*kg_to_pound)
 xcg_pass_tot2=((xcg_pass_tot*M1)-(288*o_3R*kg_to_pound))/(M_123)  #change this line
@@ -479,10 +439,6 @@ xcg_pass_tot2=((xcg_pass_tot2*M_123)+(131*o_3R*kg_to_pound))/(M1)  #case 2 xcg
 xcg_zfw=((M1*xcg_pass_tot)+(xcg_BEM*aircraft_pounds))/(aircraft_pounds+M1)
 xcg_zfw2=((M1*xcg_pass_tot2)+(xcg_BEM*aircraft_pounds))/(aircraft_pounds+M1)
 print(xcg_zfw2,xcg_zfw)
-#xcg_pass_tot=
-#print(xcg_zfw)
-#print(xcg_pass_tot)
-#xcg of aircraft fuel
 f_u_totl=f_u+f_u2
 fuel_left=[fuel]
 for i in range(len(f_u_totl)):
@@ -525,17 +481,8 @@ xcg_tot_met=xcg_tot_inch*inch_metre
 xcg_tot_met2=xcg_tot_inch2*inch_metre
 xcg_tot_final_met=xcg_tot_final_inch*inch_metre
 Time_final=Time+[Time[-2]]+[Time[-1]]
-#per_mac=xcg_tot_inch/MAC
 plt.plot(Time,xcg_tot_met)
 plt.show()
-#print(xcg_tot_final_met)
-#print(Time_final)
 plt.scatter(Time_final,xcg_tot_final_met)
 plt.show()
-#print(mzfw)
-#print(moment_pounds_final[0])
-#print(mass_aircraft_pounds[0])
-#print(per_mac)
-#print(moment_pounds_final)
-#print(fuel_left_pounds)
 print(xcg_tot_final_inch[-3]-xcg_tot_final_inch[-1])
