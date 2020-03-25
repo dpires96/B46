@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import math as m
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -109,7 +109,7 @@ for i in range(0,6):
     Lift_1=Lift
     Lift_1=Lift-f_u[i]
     Lift_req=Lift_req+[Lift_1]
-    c_l=c_l+[Lift_1/(0.5*rho[i]*v_eq[i]**2*s)]
+    c_l=c_l+[Lift_1/(0.5*rho0*v_eq[i]**2*s)]
 
  #calculating Cd
 L_Thr=[3440.3,2920.46,2106.24,1926.26,1510.33,1983.92]
@@ -248,7 +248,7 @@ for i in range(0,9):
     Lift_1=Lift
     Lift_1=Lift-f_u2[i]
     Lift_req2=Lift_req2+[Lift_1]
-    c_l2=c_l2+[Lift_1/(0.5*rho2[i]*v_eq2[i]**2*s)]
+    c_l2=c_l2+[Lift_1/(0.5*rho0*v_eq2[i]**2*s)]
 #print(Lift_req,Lift_req2)
 
 v_tilda=[]
