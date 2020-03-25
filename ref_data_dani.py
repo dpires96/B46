@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import math as m
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -109,7 +108,7 @@ for i in range(0,6):
     Lift_1=Lift
     Lift_1=Lift-f_u[i]
     Lift_req=Lift_req+[Lift_1]
-    c_l=c_l+[Lift_1/(0.5*rho[i]*v_eq[i]**2*s)]
+    c_l=c_l+[Lift_1/(0.5*rho0*v_eq[i]**2*s)]
 
  #calculating Cd
 L_Thr=[3665.03,2995.38,2399.67,1863.38,1892.21,2208.82]
@@ -274,7 +273,7 @@ for i in range(0,9):
 #calculating equivalent airspeed
 v_eq2=[]
 for i in range(0,9):
-    v_eq2=v_eq2+[vt2[i]*((rho2[i]/rho0)**0.5)]
+    v_eq2=v_eq2+[vt2[i]*((rho0/rho0)**0.5)]
 # calculating Cl2
 f_u2=[664,694,730,755,798,825,846,881,910]   #last 2 values for find Cn
 c_l2=[]
