@@ -2,6 +2,7 @@ import math as m
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+print("Measurement Data")
 # stationary measurement series 1
 #mass of the observers in kg
 p1=102
@@ -27,6 +28,7 @@ P0=101325 #pa
 T0=288.15 #K
 A=b**2/s
 W_s=60500   #from append b in Newton
+chrd=2.0569
 Lift=(p1+p2+co_ord+o_1L+o_1R+o_2L+o_2R+o_3L+o_3R+fuel+aircraft)*g
 h_p=[9000,9000,9000,9010,9030,9080]                                                    #input heights in feet
 P=[]
@@ -40,11 +42,14 @@ for i in h_p:
 #v1=2/(y-1)
 #v2=((y-1)*rho0)/(2*y*P0)
 #v3=y/(y-1)
+kinematic_factor=1.4207E-5
 V_c=[250,225,187,161,133,114]    # input speeds
 M=[]
+Re=[]
 for i in range(0,6):
     V_c[i]=V_c[i]*0.51444
     V_temp=V_c[i]**2   #speed square
+    Re=Re+[(chrd*V_c[i])/kinematic_factor]
     c1=(y-1)/(2*y)
     c2=rho0/P0
     step_1=(1+c1*c2*V_temp)
@@ -124,11 +129,53 @@ cd_0=c_d[0]-m*c_lsqr[0]     #cd_0
 
 
 alph=[1.4,2.0,3.4,4.9,7.7,10.6]
+
+plt.figure(2)
+q=np.polyfit(c_d,c_l,2)
+f=np.poly1d(q)
+c_d_plot=np.array(c_d)
+c_d_plot=np.sort(c_d_plot)    # for linspace
+c_l_plot=np.array(c_l)
+c_l_plot=np.sort(c_l_plot)
+x_new = np.linspace(c_d_plot[0], c_d_plot[-1])
+y_new = f(x_new)
+print("stuff for cd-cl")
+print("c_d_plot", c_d_plot)
+print("c_l_plot",c_l_plot)
+print("x_new",x_new)
+print("y_new",y_new)
+plt.plot(c_d_plot,c_l_plot,'o',x_new,y_new)
+plt.xlabel("C_D [-]")
+plt.ylabel("C_L [-]")
+plt.show()
+
+
+plt.figure(3)
+q=np.polyfit(alph,c_l,1)
+c_l_alpha=q[0]
+f=np.poly1d(q)
+c_d_plot=np.array(alph)
+c_d_plot=np.sort(c_d_plot)    # for linspace
+c_l_plot=np.array(c_l)
+c_l_plot=np.sort(c_l_plot)
+x_new = np.linspace(c_d_plot[0], c_d_plot[-1])
+y_new = f(x_new)
+print("stuff for cl-alpha")
+print("alpha_plot", c_d_plot)
+print("c_l_plot",c_l_plot)
+print("x_new",x_new)
+print("y_new",y_new)
+plt.plot(c_d_plot,c_l_plot,'o',x_new,y_new)
+plt.xlabel("alpha [°]")
+plt.ylabel("C_L [-]")
+plt.show()
+
+print("Data for figure 2 and 3:")
+print("Aircraft Configuration: Clean")
+print("Reynolds number range:",min(Re),max(Re))
+print("Mach Range:", min(M), max(M))
+print()
 #print(e,cd_0)
-#plt.plot(c_lsqr,c_d)
-#plt.plot(alph,c_l)
-#plt.plot(alph,c_d)
-#plt.show()
 
 #  stationary measurement series 2
 #  stationary measurement series 2
@@ -196,7 +243,7 @@ f_u2=[680,719,733,754,774,794,835,887,918]   #last 2 values for find Cn
 c_l2=[]
 Lift_req2=[]
 for i in range(0,9):
-    f_u2[i]=f_u2[i]*4.44822     # converting to nootuns
+    f_u2[i]=f_u2[i]*4.44822     # converting to newtons
     Lift_1=Lift
     Lift_1=Lift-f_u2[i]
     Lift_req2=Lift_req2+[Lift_1]
@@ -208,6 +255,8 @@ for i in range(0,7):
     v_tilda=v_tilda+[v_eq2[i]*(W_s/Lift_req2[i])**0.5]    #input for the graph
 
 #print(v_tilda)
+    
+
 #print(v_eq2,a2,rho2,vt2)
 Tot_Thr_s2=[2848.48,2976.46,3091.32,3209.14,2768.16,2659.54,2572.3]
 
@@ -228,7 +277,30 @@ for i in range(0,7):
 
 #print(de_str2)
 #print(v_tilda)
+plt.figure(0)
+q1=np.polyfit(v_tilda,de_str2,2)
+f1=np.poly1d(q1)
+v_tilda1=np.array(v_tilda)
+v_tilda1=np.sort(v_tilda1)    # for linspace sorted in ascending order, for this graph v_tilda is called v_tilda1
+de_str2=np.array(de_str2)
+de_str2=np.sort(de_str2)
+#print(de_str2)
+x_new1 = np.linspace(v_tilda1[0], v_tilda1[-1])
+y_new1 = f1(x_new1)
+plt.plot(v_tilda1,de_str2,'o', x_new1, y_new1)
+#plt.xlim([v_tilda[0]-1, v_tilda[-1] + 1 ])
+plt.xlabel("ṽ_e [m/s]")
+plt.ylabel("δ_e [°]")
 
+#plt.scatter(v_tilda1,de_str2)
+plt.gca().invert_yaxis()
+plt.show()
+
+#print("Stuff graphs ve delta e:")
+#print("v_tilda1",v_tilda1)
+#print("de_str2", de_str2)
+#print("x_new1", x_new1)
+#print("y_new1", y_new1)
 
 Fe_ref2=[2,-12,-23,-37,31,61,85] #Fe ref2 in N
 alpha2=[5.0,5.8,6.7,7.7,4.2,3.6,3.2] #Alpha ref2 in deg
@@ -237,10 +309,42 @@ slope_de_dalpha=(min(de2)-max(de2))/(max(alpha2)-min(alpha2))
 #print(slope_de_dalpha)
 cm_alpha2=-slope_de_dalpha*cm_delta2
 #print(cm_alpha2)
-
-plt.scatter(alpha2,de2)
+Lift_req2=Lift_req2[0:-2]     # because the last 2 values where for finding Cn
+Fe_air_eff=[]
+for i in range (0,7):
+    Fe_air_eff= Fe_air_eff+[Fe_ref2[i]*W_s/Lift_req2[i]]
+    
+plt.figure(1)
+plt.gca().invert_yaxis()
+q=np.polyfit(v_tilda,Fe_air_eff,2)
+f=np.poly1d(q)
+v_tilda=np.array(v_tilda)
+v_tilda=np.sort(v_tilda)    # for linspace
+Fe_air_eff=np.array(Fe_air_eff)
+Fe_air_eff=np.sort(Fe_air_eff)
+x_new = np.linspace(v_tilda[0], v_tilda[-1])
+y_new = f(x_new)
+plt.plot(v_tilda,Fe_air_eff,'o', x_new, y_new)
+plt.xlim([v_tilda[0]-1, v_tilda[-1] + 1 ])
+plt.xlabel("ṽ_e [m/s]")
+plt.ylabel("F_e [N]")
 plt.show()
+
+#print("Stuff graphs ve Fe:")
+#print("v_tilda",v_tilda1)
+#print("Fe_air_eff", Fe_air_eff)
+#print("x_new", x_new)
+#print("y_new", y_new)
+#plt.scatter(alpha2,de2)
+#plt.show()
 #plt.scatter(v_tilda,de_str2)
 #plt.gca().invert_yaxis()
 #plt.show()
 
+#Print required values:
+print("Values required:")
+print("Oswald factor:", e)
+print("CD_0:",cd_0)
+print("C_L_alpha=", c_l_alpha)
+print("C_m_alpha=", cm_alpha2)
+print("C_m_delta=", cm_delta2)
