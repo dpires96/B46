@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 # stationary measurement series 1
 #mass of the observers in kg
-p1=95
-p2=92
-o_1L=66
-o_1R=61
-o_2L=75
-o_2R=78
-o_3L=86
-o_3R=68
-co_ord=74
+p1=102
+p2=80
+o_1L=74
+o_1R=80
+o_2L=81
+o_2R=91
+o_3L=71
+o_3R=99
+co_ord=183
 M_pass=[p1,p2,o_1L,o_1R,o_2L,o_2R,o_3L,o_3R,co_ord]
-fuel=4050*0.453592
+fuel=2561*0.453592
 aircraft=9165*0.453592
 aircraft_pounds=aircraft/0.453592
 g=9.80665
@@ -31,7 +31,27 @@ A=b**2/s
 W_s=60500   #from append b in Newton
 Mass_Pass_tot_pound=(p1+p2+co_ord+o_1L+o_1R+o_2L+o_2R+o_3L+o_3R)/0.453592
 Lift=(p1+p2+co_ord+o_1L+o_1R+o_2L+o_2R+o_3L+o_3R+fuel+aircraft)*g
-h_p=[5010,5020,5020,5030,5020,5110]                                                    #input heights in feet
+h_p=[9000,9000,9000,9010,9030,9080]  #input heights in feet
+V_c=[250,225,187,161,133,114]    # input speeds
+T_m=[8.5,6.1,3.2,2.8,1.5,0.5]
+f_u=[433,472,530,553,582,613]
+L_Thr=[3440.3,2920.46,2106.24,1926.26,1510.33,1983.92]
+R_Thr=[3780.36,3241.28,2458.8,2189.41,1923.65,2312.05]
+alph=[1.4,2.0,3.4,4.9,7.7,10.6]
+de=[-0.6,-1.0,-1.5,-2.0,-0.2,0.2,0.5,-0.5,-1.1]
+Tot_Thr2=[5864.64,6135.92,6380.2,6662.9,6262.55,6311.75,6613.49]
+h_p2=[8090,8430,8640,9000,8310,7990,7480,8470,8560]
+V_c2=[161,150,140,131,172,182,191,162,162]    # input speeds
+T_m2=[3.2,2.2,1.5,0.8,3.5,4.2,2.2,2.8,3.0]
+f_u2=[680,719,733,754,774,794,835,887,918]   #last 2 values for find Cn
+Tot_Thr_s2=[2848.48,2976.46,3091.32,3209.14,2768.16,2659.54,2572.3] #there is an input that needs to be changed in line 242
+Fe_ref2=[2,-12,-23,-37,31,61,85] #Fe ref2 in N
+alpha2=[5.0,5.8,6.7,7.7,4.2,3.6,3.2] #Alpha ref2 in deg
+de2=[-0.6,-1.0,-1.5,-2.0,-0.2,0.2,0.5]    #de ref2 in deg
+LEMAC=261.56
+MAC=80.98
+Time=[0,1157,1297,1426,1564,1787,1920,2239,2351,2484,2576,2741,2840,2920,3062,3166]
+# input at line 250 needs to be updated if the delta xcg changes. This delta cg is computed at the end of the code
 P=[]
 for i in h_p:
      hp = i * 0.3048
@@ -44,7 +64,6 @@ for i in h_p:
 #v1=2/(y-1)
 #v2=((y-1)*rho0)/(2*y*P0)
 #v3=y/(y-1)
-V_c=[249,221,192,163,130,118]    # input speeds
 M=[]
 for i in range(0,6):
     V_c[i]=V_c[i]*0.51444
@@ -73,7 +92,6 @@ for i in range(0,6):
 #C_L=L/(0.5*rho*v**2*s)
 
 #temperature correction
-T_m=[12.5,10.5,8.8,7.2,6,5.2]
 T=[]
 for i in range(0,6):
     T_m[i]=T_m[i]+273.15
@@ -99,7 +117,6 @@ for i in range(0,6):
     v_eq=v_eq+[vt[i]*((rho[i]/rho0)**0.5)]
 
 # calculating Cl
-f_u=[360,412,447,478,532,570]
 c_l=[]
 Lift_req=[]
 for i in range(0,6):
@@ -107,16 +124,14 @@ for i in range(0,6):
     Lift_1=Lift
     Lift_1=Lift-f_u[i]
     Lift_req=Lift_req+[Lift_1]
-    c_l=c_l+[Lift_1/(0.5*rho0*v_eq[i]**2*s)]  #for v_eq the density used is rho0
+    c_l=c_l+[Lift_1/(0.5*rho0*v_eq[i]**2*s)]
 
  #calculating Cd
-L_Thr=[3665.03,2995.38,2399.67,1863.38,1892.21,2208.82]
-R_Thr=[3770.95,3057.27,2526.11,2015.87,2070.75,2405.27]
 Tot_Thr=[]
 c_d=[]
 for i in range(0,6):
     Tot_Thr=Tot_Thr+[L_Thr[i]+R_Thr[i]]
-    c_d=c_d+[Tot_Thr[i]/(0.5*rho[i]*v_eq[i]**2*s)]
+    c_d=c_d+[Tot_Thr[i]/(0.5*rho0*v_eq[i]**2*s)]
 
 c_lsqr=[]
 for i in range(0,6):
@@ -125,10 +140,8 @@ for i in range(0,6):
 e=(c_lsqr[-1]-c_lsqr[0])/(c_d[-1]-c_d[0])*(1/(m.pi*A))  #e
 m=(1/(m.pi*A*e))
 cd_0=c_d[0]-m*c_lsqr[0]     #cd_0
-print("e",e)
-print("cd0",cd_0)
-
-alph=[1.7,2.4,3.6,5.4,8.7,10.6]
+print("e=",e)
+print("cdo",cd_0)
 alph_rad=[]
 for i in range(0,6):
     alph_rad=alph_rad+[alph[i]*3.14/180]
@@ -158,18 +171,14 @@ print("cl_alpha",cl_alpha)
 #  stationary measurement series 2
 cm_tc=-0.0064
 mfs=0.048  #kg/s
-de=[0,-0.4,-0.9,-1.5,0.4,0.6,1,0,-0.5]
-Tot_Thr2=[5494.68,5875.28,6289.03,6653.86,6411.24,6541.06,6517.09]
 d_eng=0.686
 chrd=2.0569
-h_p2=[6060,6350,6550,6880,6160,5810,5310,5730,5790]                                                    #input heights in feet
 P2=[]
 for i in h_p2:
      hp = i * 0.3048
      z = (-g / (L * R))
      P2=P2+([P0*(1+(L*hp/T0))**z])
 
-V_c2=[161,150,140,130,173,179,192,161,161]    # input speeds
 M2=[]
 for i in range(0,9):
     V_c2[i]=V_c2[i]*0.51444
@@ -190,7 +199,7 @@ for i in range(0,9):
     step_8=c6*step_7
     M2=M2+[step_8**0.5]
 
-T_m2=[5.5,4.5,3.5,2.5,5.0,6.2,8.2,5,5]
+
 T2=[]
 for i in range(0,9):
     T_m2[i]=T_m2[i]+273.15
@@ -214,17 +223,15 @@ v_eq2=[]
 for i in range(0,9):
     v_eq2=v_eq2+[vt2[i]*((rho2[i]/rho0)**0.5)]
 # calculating Cl2
-f_u2=[664,694,730,755,798,825,846,881,910]   #last 2 values for find Cn
 c_l2=[]
 Lift_req2=[]
 for i in range(0,9):
-    f_u2[i]=f_u2[i]*4.44822 # converting to nootuns
+    f_u2[i]=f_u2[i]*4.44822     # converting to nootuns
     Lift_1=Lift
     Lift_1=Lift-f_u2[i]
     Lift_req2=Lift_req2+[Lift_1]
     c_l2=c_l2+[Lift_1/(0.5*rho0*v_eq2[i]**2*s)]
-
-#print(Lift,Lift_req2,f_u2)
+#print(Lift_req,Lift_req2)
 
 v_tilda=[]
 for i in range(0,7):
@@ -232,7 +239,6 @@ for i in range(0,7):
 
 #print(v_tilda)
 #print(v_eq2,a2,rho2,vt2)
-Tot_Thr_s2=[2678.12,2801.72,2914.08,3040.54,2593.0,2508.5,2355.64]
 
 TC2=[]
 Tcs2=[]
@@ -240,13 +246,12 @@ for i in range(0,7):
     TC2=TC2+[2*Tot_Thr2[i]/(rho2[i]*(vt2[i]**2)*d_eng**2)]
     Tcs2 = Tcs2 + [2 * Tot_Thr_s2[i] / (rho2[i] * (vt2[i] ** 2) * d_eng ** 2)]
 deg_rad=3.14/180
-de1=de[-1]*deg_rad
-delta_xcg2=(-1.7)*0.0254   #metres
+de1=(de[-1]-de[-2])*deg_rad
+delta_xcg2=(-2.696)*0.0254   #metres
 cn2=c_l2[-1]
-print(rho2[-1],V_c2[-1])
 cm_delta2=-1/(de1)*cn2*(delta_xcg2/chrd)
-print("cm_delta=",cm_delta2)
-#print(cn2)
+print("cm_delta",cm_delta2)
+
 de_str2=[]
 for i in range(0,7):
     de_str2=de_str2+[de[i]-1/cm_delta2*cm_tc*(Tcs2[i]-TC2[i])]
@@ -272,17 +277,15 @@ plt.gca().invert_yaxis()
 plt.show()
 
 
-Fe_ref2=[0,-23,-29,-46,26,40,83] #Fe ref2 in N
-alpha2=[5.3,6.3,7.3,8.5,4.5,4.1,3.4] #Alpha ref2 in deg
-de2=[0,-0.4,-0.9,-1.5,0.4,0.6,1]    #de ref2 in deg
+
 slope_de_dalpha=(min(de2)-max(de2))/(max(alpha2)-min(alpha2))
-print(slope_de_dalpha)
+#print(slope_de_dalpha)
 cm_alpha2=-slope_de_dalpha*cm_delta2
 Lift_req2=Lift_req2[0:-2]     # because the last 2 values where for finding Cn
 Fe_air_eff=[]
 for i in range (0,7):
     Fe_air_eff= Fe_air_eff+[Fe_ref2[i]*W_s/Lift_req2[i]]
-print("cm_alpha2",cm_alpha2)
+print("cm_alpha",cm_alpha2)
 #plt.scatter(alpha2,de2)
 #plt.show()
 #plt.scatter(v_tilda,Fe_air_eff)
@@ -339,7 +342,6 @@ xcg_pass_tot2=((xcg_pass_tot2*M_123)+(131*o_3R*kg_to_pound))/(M1)  #case 2 xcg
 xcg_zfw=((M1*xcg_pass_tot)+(xcg_BEM*aircraft_pounds))/(aircraft_pounds+M1)
 xcg_zfw2=((M1*xcg_pass_tot2)+(xcg_BEM*aircraft_pounds))/(aircraft_pounds+M1)
 print(xcg_zfw2,xcg_zfw)
-#xcg_pass_tot=
 #print(xcg_zfw)
 #print(xcg_pass_tot)
 #xcg of aircraft fuel
@@ -352,6 +354,7 @@ for i in range(len(f_u_totl)):
 fuel_left_pounds=[]             #for mass balance form
 for i in range(len(fuel_left)):
     fuel_left_pounds=fuel_left_pounds+[fuel_left[i]*kg_to_pound]
+
 moment_pounds=[298.16,591.18,879.08,1165.42,1448.40,1732.53,2014.80,2298.84,2581.92,2866.30,3150.18,3434.52,3718.52,4003.23,4287.76,4572.24,4856.56,5141.16,5425.64,5709.90,5994.04,6278.47,6562.82,6846.96,7131,7415.33,7699.60,7984.34,8269.06,8554.05,8839.04,9124.80,9410.62,9696.97,9983.40,10270.08,10556.80,10843.87,11131,11418.2,11705.5,11993.31,12281.18,12569.04,12856.86,13144.73,13432.48,13720.56,14008.46,14320.34]
 mass_pounds=[]
 for i in range(1,51):
@@ -388,8 +391,8 @@ Time_final=Time+[Time[-2]]+[Time[-1]]
 #per_mac=xcg_tot_inch/MAC
 plt.plot(Time,xcg_tot_met)
 plt.show()
-#print(xcg_tot_final_met)
-#print(Time_final)
+print(xcg_tot_final_met)
+print(Time_final)
 plt.scatter(Time_final,xcg_tot_final_met)
 plt.show()
 #print(mzfw)
@@ -398,4 +401,5 @@ plt.show()
 #print(per_mac)
 #print(moment_pounds_final)
 #print(fuel_left_pounds)
-print(xcg_tot_final_inch[-3]-xcg_tot_final_inch[-1])
+delta_xcg2=(xcg_tot_final_inch[-3]-xcg_tot_final_inch[-1])
+print("Delta_xcg",delta_xcg2)
